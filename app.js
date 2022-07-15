@@ -8,6 +8,7 @@ const notFound = require('./middleware/notFound')
 const errorHandlerMiddleware = require('./middleware/errorHandler')
 // middleware
 
+app.use(express.static('./public'))
 app.use(express.json());
 
 
@@ -17,7 +18,7 @@ app.use('/api/v1/tasks', routes);
 app.use(notFound);
 app.use(errorHandlerMiddleware);
 
-const port = 6969;
+const port = process.env.PORT || 6969;
 
 const start = async()=>{
     try {
