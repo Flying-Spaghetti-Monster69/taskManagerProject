@@ -8,14 +8,48 @@ const getAllTasks = async (req,res)=>{
         res.status(500).json({msg: error})
     }
 }
-const getTasks = (req,res)=>{
-    res.send(req.params);
+const getTasks = async (req,res)=>{
+    try{
+        const {id:taskID} = req.params
+        const task = await Task.findOne({_id:taskID});
+        if(!task){
+            return res.status(404).json({msg: `theres is not task with id of ${taskID}`})
+        }
+        res.status(200).json({task});
+    } catch(error){
+        res.status(500).json({msg: error})
+ }
 }
-const changeTasks = (req,res)=>{
-    res.send('sent request of updating tasks');
+
+const changeTasks = async (req,res)=>{
+    try {
+        const {id:taskID}= req.params;
+
+        const task = await Task.findOneAndUpdate({_id:taskID}, req.body,{
+            new: true,
+            runValidators: true
+        })
+
+        if(!task){
+            return res.status(404).json({msg: `theres is not task with id of ${taskID}`})
+        }
+        
+        res.status(200).json({task});
+    } catch (error) {
+        res.status(500).json({msg:error})
+    }
 }
-const deleteTasks = (req,res)=>{
-    res.send('sent request of deleting tasks');
+const deleteTasks = async (req,res)=>{
+    try{
+        const {id: taskID} = req.params;
+        const task = await Task.findOneAndDelete({_id:taskID})
+        if(!task){
+            return res.status(404).json({msg: `theres is not task with id of ${taskID}`})
+        }
+        res.status(200).json({task});
+    } catch(error){
+        res.status(500).json({msg: error})
+    }
 }
 const createTasks = async (req,res)=>{
     try{
